@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { Car } from './components';
 import { client } from './graphql';
-import { Provider } from './providers';
+import { ApolloProvider as Provider } from 'react-apollo';
 
 function App() {
   return (

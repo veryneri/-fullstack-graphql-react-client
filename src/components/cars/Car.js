@@ -1,15 +1,12 @@
 import React from 'react';
+import { ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
-import { WithProvider } from '../hocs';
 
 class Car extends React.Component {
-    state = {
-        car: {},
-        loading: true,
-    };
+    state = {};
 
-    loadData = async () => {
-        const car = await this.props.client.query({
+    loadData = async (client) => {
+        const car = await client.query({
             query: gql`
                 {
                     carById(id: "a") {
@@ -29,20 +26,30 @@ class Car extends React.Component {
         });
     }
 
-    componentWillMount() {
-        this.loadData();
-    }
-
     render() {
         if (this.state.loading) {
             return 'Loading...';
         }
+        
         return (
-            <div>
-                {this.state.car.brand}
-            </div>
+            <>
+                {
+                    this.state.car && (
+                        <div>
+                            {this.state.car.brand}
+                        </div>
+                    )
+                }
+                <ApolloConsumer>
+                    {
+                        client => (
+                            <button onClick={() => this.loadData(client)}>Query</button>
+                        )
+                    }
+                </ApolloConsumer>
+            </>
         );
     }
 }
 
-export default WithProvider(Car);
+export default Car;
