@@ -1,6 +1,22 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { client } from './graphql';
+import gql from 'graphql-tag';
+
+client.query({
+  query: gql`
+    {
+      carById(id: "a") {
+        color
+        brand
+        parts {
+          name
+        }
+      }
+    }
+  `,
+}).then(data => console.log(data));
 
 function App() {
   return (
