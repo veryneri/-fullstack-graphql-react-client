@@ -1,12 +1,12 @@
 import React from 'react';
-import { ApolloConsumer } from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import gql from 'graphql-tag';
 
 class Car extends React.Component {
     state = {};
 
-    loadData = async (client) => {
-        const car = await client.query({
+    loadData = async () => {
+        const car = await this.props.client.query({
             query: gql`
                 {
                     carById(id: "a") {
@@ -40,16 +40,10 @@ class Car extends React.Component {
                         </div>
                     )
                 }
-                <ApolloConsumer>
-                    {
-                        client => (
-                            <button onClick={() => this.loadData(client)}>Query</button>
-                        )
-                    }
-                </ApolloConsumer>
+                <button onClick={this.loadData}>Query</button>
             </>
         );
     }
 }
 
-export default Car;
+export default withApollo(Car);
