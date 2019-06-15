@@ -5,19 +5,16 @@ import gql from 'graphql-tag';
 class Car extends React.Component {
     state = {};
 
-    loadData = async () => {
+    loadData = async (id) => {
         const car = await this.props.client.query({
             query: gql`
-                {
-                    carById(id: "a") {
-                        color
+                query CarById($id: ID!){
+                    carById(id: $id) {
                         brand
-                        parts {
-                        name
-                        }
                     }
                 }
             `,
+            variables: {id},
         });
 
         this.setState({
@@ -40,7 +37,7 @@ class Car extends React.Component {
                         </div>
                     )
                 }
-                <button onClick={this.loadData}>Query</button>
+                <button onClick={() => this.loadData('a')}>Query</button>
             </>
         );
     }
