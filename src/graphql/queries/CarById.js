@@ -20,6 +20,7 @@ export default ({id}) => (
                 loading,
                 error,
                 data,
+                refetch,
                 networkStatus,
             }) => {
                 if (loading) {
@@ -28,6 +29,8 @@ export default ({id}) => (
                 if (error) {
                     return 'Error';
                 }
+
+                setTimeout(() => refetch({ id: 'b' }), 2000);
 
                 return data.carById.brand;
             }
