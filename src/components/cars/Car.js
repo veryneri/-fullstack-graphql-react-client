@@ -1,9 +1,14 @@
 import React from 'react';
-import { AddCar } from '../../graphql';
+import { AddCar, Cars } from '../../graphql';
 
 class Car extends React.Component {
     render() {
-        return <AddCar />
+        return (
+            <>
+                <AddCar />
+                <Cars />
+            </>
+        );
     }
 }
 
