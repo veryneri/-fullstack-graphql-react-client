@@ -1,65 +1,70 @@
 import React from 'react';
-import { withApollo } from 'react-apollo';
+import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
-class AddCar extends React.Component {
-    state = {
-        insertedCar: {} 
-    };
-
-    addCar = async () => {
-        const result = await this.props.client.mutate({
-            mutation: gql`
-                mutation AddCar(
-                    $brand: String!,
-                    $color: String!,
-                    $doors: Int!,
-                    $type: CarTypes!
-                ) {
-                    addCar(
-                        brand: $brand,
-                        color: $color,
-                        doors: $doors,
-                        type: $type
-                    ) {
-                        brand
-                        color
-                        id
-                    }
-                }
-            `,
-            variables: {
-                brand: 'Honda',
-                color: 'Midnight Blue',
-                doors: 4,
-                type: 'Coupe'
-            },
-        });
-        console.log(result);
-        this.setState({
-            insertedCar: result.data.addCar
-        });
+const ADD_CAR = gql`
+    mutation AddCar(
+        $brand: String!,
+        $color: String!,
+        $doors: Int!,
+        $type: CarTypes!
+    ) {
+        addCar(
+            brand: $brand,
+            color: $color,
+            doors: $doors,
+            type: $type
+        ) {
+            brand
+            color
+            id
+        }
     }
+`;
 
-    componentDidMount() {
-        this.addCar();
-    }
-
+export default class AddCar extends React.Component {
     render() {
-        const {
-            brand,
-            color,
-            id,
-        } = this.state.insertedCar;
-
         return (
-            <div>
-                {id}
-                {brand}
-                {color}
-            </div>
+            <Mutation mutation={ADD_CAR}>
+                {
+                    (
+                        addCar,
+                        {
+                            loading,
+                            data,
+                            error,
+                            called,
+                        },
+                    ) => (
+                        <div>
+                            <button
+                                onClick={() => {
+                                    addCar({
+                                        variables: {
+                                            brand: 'Honda',
+                                            color: 'Midnight Blue',
+                                            doors: 2,
+                                            type: 'Coupe',
+                                        }
+                                    })
+                                }}
+                            >
+                                Add Car
+                            </button>
+                            { loading && <div>Loading ...</div> }
+                            {
+                                data && (
+                                    <div>
+                                        { data.addCar.id }
+                                        { data.addCar.brand }
+                                        { data.addCar.color }
+                                    </div>
+                                )
+                            }
+                        </div>
+                    )
+                }
+            </Mutation>
         );
     }
 }
-
-export default withApollo(AddCar);
