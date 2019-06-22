@@ -22,10 +22,29 @@ const ADD_CAR = gql`
     }
 `;
 
+const CARS = gql`
+    query {
+        cars {
+            id
+            brand
+            color
+        }
+    }
+`;
+
 export default class AddCar extends React.Component {
     render() {
         return (
-            <Mutation mutation={ADD_CAR}>
+            <Mutation
+                mutation={ADD_CAR}
+                update={(cache, { data: { addCar } }) => {
+                    const data = cache.readQuery({
+                        query: CARS
+                    });
+                    data.cars.push(addCar);
+                    cache.writeQuery({ query: CARS, data });
+                }}
+            >
                 {
                     (
                         addCar,
