@@ -1,7 +1,6 @@
 import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Cars } from '../subscriptions';
 
 const CARS = gql`
     query {
@@ -30,10 +29,16 @@ export default () => (
                 }
 
                 return (
-                    <Cars
-                        cars={data.cars}
-                        subscribeToMore={subscribeToMore}
-                    />
+                    <div>
+                        <p>All cars</p>
+                        {
+                            data.cars.map(car => (
+                                <div key={car.id}>
+                                    {car.id} {car.brand} {car.color}
+                                </div>
+                            ))
+                        }
+                    </div>
                 );
             }
         }
